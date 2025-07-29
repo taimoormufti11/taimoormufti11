@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Health Calculators</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <div id="welcome-section">
+      <h1>Welcome!</h1>
+      <input type="text" id="name" placeholder="Enter your name" />
+      <input type="number" id="age" placeholder="Enter your age" />
+      <select id="gender">
+        <option value="" disabled selected>Select Gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+      <button id="continue-btn">Continue</button>
+    </div>
+
+    <div id="calculator-section" style="display: none;">
+      <h2 id="greeting"></h2>
+      <label for="calculator-type">Choose Calculator:</label>
+      <select id="calculator-type">
+        <option value="bmi">BMI</option>
+        <option value="bmr">BMR</option>
+        <option value="whr">Waist-to-Hip Ratio (WHR)</option>
+        <option value="whtr">Waist-to-Height Ratio (WHtR)</option>
+        <option value="lbm">Lean Body Mass (LBM)</option>
+        <option value="ibw">Ideal Body Weight (IBW)</option>
+      </select>
+
+      <div id="input-fields"></div>
+      <button id="calculate-btn">Calculate</button>
+      <div class="result" id="result"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
