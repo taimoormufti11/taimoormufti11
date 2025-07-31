@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Universe Explorer</title>
+    <link rel="stylesheet" href="design.css">
+</head>
+<body>
+<body>
+    <canvas id="starCanvas"></canvas> <!-- 🌟 New: Star background -->
+
+    
+
+    <h1>💫The Solar System</h1>
+<div class="speed-control">
+  <label for="speedSlider">🌀 Orbit Speed:</label>
+  <input type="range" id="speedSlider" min="0.1" max="3" step="0.1" value="1">
+  <span id="speedValue">1x</span>
+</div>
+
+    <div class="solar-system">
+      <div class="sun" onclick="showInfo('Sun')"></div>
+
+
+<div class="planet mercury" onclick="showInfo('Mercury')"></div>
+<div class="planet venus" onclick="showInfo('Venus')"></div>
+<div class="planet earth" onclick="showInfo('Earth')"></div>
+<div class="planet mars" onclick="showInfo('Mars')"></div>
+<div class="planet jupiter" onclick="showInfo('Jupiter')"></div>
+<div class="planet saturn" onclick="showInfo('Saturn')">
+    <div class="ring"></div>
+</div>
+<div class="planet uranus" onclick="showInfo('Uranus')"></div>
+<div class="planet neptune" onclick="showInfo('Neptune')"></div>
+<div class="planet pluto" onclick="showInfo('Pluto')"></div>
+
+    </div>
+
+    <div class="info-box" id="infoBox">
+        <h2 id="planetName">Planet Name</h2>
+        <p id="planetInfo">Click a planet to learn more.</p>
+        <button onclick="closeInfo()">Close</button>
+    </div>
+
+    <script>
+const planetData = {
+    Sun:     { gravity: 274, temp: 5505, description: "A massive star. Center of our solar system." },
+    Mercury: { gravity: 3.7, temp: 167, description: "Small and rocky." },
+    Venus:   { gravity: 8.87, temp: 464, description: "Hot and dense atmosphere." },
+    Earth:   { gravity: 9.81, temp: 15, description: "Our home planet." },
+    Mars:    { gravity: 3.71, temp: -65, description: "Red and dusty." },
+    Jupiter: { gravity: 24.79, temp: -110, description: "Gas giant, massive storms." },
+    Saturn:  { gravity: 10.44, temp: -140, description: "Famous for its rings." },
+    Uranus:  { gravity: 8.69, temp: -195, description: "Icy and rotates sideways." },
+    Neptune: { gravity: 11.15, temp: -200, description: "Farthest, windy and blue." },
+    Pluto:   { gravity: 0.62, temp: -225, description: "Tiny and cold. Dwarf planet." }
+};
+
+
+        function showInfo(name) {
+            const infoBox = document.getElementById('infoBox');
+            const data = planetData[name];
+            document.getElementById('planetName').textContent = name;
+            document.getElementById('planetInfo').textContent =
+                `Gravity: ${data.gravity} m/s² | Avg Temp: ${data.temp}°C | ${data.description}`;
+            infoBox.style.display = 'block';
+        }
+
+        function closeInfo() {
+            document.getElementById('infoBox').style.display = 'none';
+        }
+    </script>
+<script>
+    // Starfield animation
+    const canvas = document.getElementById('starCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let stars = [];
+    const numStars = 150;
+
+    function initStars() {
+        stars = [];
+        for (let i = 0; i < numStars; i++) {
+            stars.push({
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
+                radius: Math.random() * 1.5,
+                alpha: Math.random(),
+                delta: Math.random() * 0.02
+            });
+        }
+    }
+
+    function drawStars() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let star of stars) {
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
+            ctx.fill();
+            star.alpha += star.delta;
+            if (star.alpha <= 0 || star.alpha >= 1) {
+                star.delta = -star.delta;
+            }
+        }
+        requestAnimationFrame(drawStars);
+    }
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        initStars();
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    drawStars();
+</script> 
+
+<script>
+const slider = document.getElementById("speedSlider");
+const speedDisplay = document.getElementById("speedValue");
+
+// When slider value changes
+slider.addEventListener("input", () => {
+    const speed = parseFloat(slider.value);
+    speedDisplay.textContent = `${speed.toFixed(1)}x`;
+
+    // Adjust orbit speed of each planet
+    document.querySelectorAll(".planet").forEach(planet => {
+        const style = window.getComputedStyle(planet);
+        const animationName = style.animationName;
+        const baseDuration = getBaseDuration(animationName);
+        if (baseDuration) {
+            planet.style.animationDuration = (baseDuration / speed) + "s";
+        }
+    });
+});
+
+// Maps each orbit name to original duration
+function getBaseDuration(name) {
+    const durations = {
+        orbit1: 10,
+        orbit2: 15,
+        orbit3: 20,
+        orbit4: 25,
+        orbit5: 30,
+        orbit6: 35,
+        orbit7: 40,
+        orbit8: 45,
+        orbit9: 50
+    };
+    return durations[name] || null;
+}
+</script>
+
+
+</body>
+</html>
