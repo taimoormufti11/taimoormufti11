@@ -1,55 +1,292 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', sans-serif;
-}
-
 body {
-  background: linear-gradient(to right, #74ebd5, #acb6e5);
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: radial-gradient(ellipse at center, #000010 0%, #000000 100%);
+    color: white;
+    text-align: center;
+    overflow: hidden;
 }
 
-.container {
-  background-color: white;
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  width: 320px;
-  text-align: center;
+h1 {
+    margin: 20px;
+    font-size: 2.5em;
+    color: #ffffff;
 }
 
-input, select {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  font-size: 16px;
+.solar-system {
+    position: relative;
+    width: 100vw;
+    height: 80vh;
+    margin-top: 20px;
 }
 
-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #4CAF50;
-  color: white;
-  font-size: 16px;
-  border: none;
-  border-radius: 8px;
-  margin-top: 10px;
-  cursor: pointer;
+.sun {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80px;
+    height: 80px;
+    margin-left: -40px;
+    margin-top: -40px;
+    background: radial-gradient(circle, #ffff66, #ff9900, #cc6600);
+    border-radius: 50%;
+    box-shadow:
+        0 0 100px 40px #ffd700,
+        0 0 200px 80px #ffae00,
+        0 0 300px 120px rgba(255, 140, 0, 0.4);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    z-index: 10;
 }
 
-button:hover {
-  background-color: #45a049;
+
+.planet {
+    position: absolute;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.3s ease;
 }
 
-.result {
-  margin-top: 20px;
-  font-weight: bold;
-  font-size: 18px;
-  color: #333;
+.planet:hover {
+    transform: scale(1.2);
 }
+
+.mercury {
+    width: 20px;
+    height: 20px;
+    background-color: gray;
+    top: 50%;
+    left: 30%;
+    animation: orbit1 10s linear infinite;
+}
+
+.venus {
+    width: 28px;
+    height: 28px;
+    background-color: goldenrod;
+    top: 50%;
+    left: 35%;
+    animation: orbit2 15s linear infinite;
+}
+
+.earth {
+    width: 30px;
+    height: 30px;
+    background-color: deepskyblue;
+    top: 50%;
+    left: 40%;
+    animation: orbit3 20s linear infinite;
+}
+
+.mars {
+    width: 25px;
+    height: 25px;
+    background-color: red;
+    top: 50%;
+    left: 45%;
+    animation: orbit4 25s linear infinite;
+}
+
+@keyframes orbit1 {
+    0% { transform: rotate(0deg) translateX(80px) rotate(0deg); }
+    100% { transform: rotate(360deg) translateX(80px) rotate(-360deg); }
+}
+
+@keyframes orbit2 {
+    0% { transform: rotate(0deg) translateX(120px) rotate(0deg); }
+    100% { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
+}
+
+@keyframes orbit3 {
+    0% { transform: rotate(0deg) translateX(160px) rotate(0deg); }
+    100% { transform: rotate(360deg) translateX(160px) rotate(-360deg); }
+}
+
+@keyframes orbit4 {
+    0% { transform: rotate(0deg) translateX(200px) rotate(0deg); }
+    100% { transform: rotate(360deg) translateX(200px) rotate(-360deg); }
+}
+
+.info-box {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.8);
+    padding: 20px;
+    border: 1px solid #555;
+    border-radius: 10px;
+    width: 300px;
+}
+/* ✨ Star background canvas */
+#starCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-color: transparent;
+}
+.jupiter {
+    width: 60px;
+    height: 60px;
+    background-color: peru;
+    top: 50%;
+    left: 50%;
+    animation: orbit5 30s linear infinite;
+}
+
+.saturn {
+    width: 55px;
+    height: 55px;
+    background-color: khaki;
+    top: 50%;
+    left: 50%;
+    animation: orbit6 35s linear infinite;
+}
+
+.uranus {
+    width: 45px;
+    height: 45px;
+    background-color: lightblue;
+    top: 50%;
+    left: 50%;
+    animation: orbit7 40s linear infinite;
+}
+
+.neptune {
+    width: 44px;
+    height: 44px;
+    background-color: royalblue;
+    top: 50%;
+    left: 50%;
+    animation: orbit8 45s linear infinite;
+}
+
+.pluto {
+    width: 18px;
+    height: 18px;
+    background-color: lightgray;
+    top: 50%;
+    left: 50%;
+    animation: orbit9 50s linear infinite;
+}
+
+.jupiter {
+    width: 60px;
+    height: 60px;
+    background-color: peru;
+    top: 50%;
+    left: 50%;
+    animation: orbit5 30s linear infinite;
+}
+
+.saturn {
+    width: 55px;
+    height: 55px;
+    background-color: khaki;
+    top: 50%;
+    left: 50%;
+    animation: orbit6 35s linear infinite;
+    position: absolute;
+    border-radius: 50%;
+    z-index: 2;
+}
+
+/* 🪐 Saturn’s Rings */
+.saturn .ring {
+    position: absolute;
+    width: 90px;       /* Width of the ring */
+    height: 25px;      /* Thickness of the ring */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(20deg);
+    border: 3px solid rgba(150, 150, 150, 0.5);
+    border-radius: 50%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.uranus {
+    width: 45px;
+    height: 45px;
+    background-color: lightblue;
+    top: 50%;
+    left: 50%;
+    animation: orbit7 40s linear infinite;
+}
+
+.neptune {
+    width: 44px;
+    height: 44px;
+    background-color: royalblue;
+    top: 50%;
+    left: 50%;
+    animation: orbit8 45s linear infinite;
+}
+
+.pluto {
+    width: 18px;
+    height: 18px;
+    background-color: lightgray;
+    top: 50%;
+    left: 50%;
+    animation: orbit9 50s linear infinite;
+}
+
+/* Orbit animations */
+@keyframes orbit5 {
+    0% { transform: rotate(0deg) translateX(240px) rotate(0deg); }
+    100% { transform: rotate(360deg) translateX(240px) rotate(-360deg); }
+}
+
+@keyframes orbit6 {
+    0% { transform: rotate(0deg) translateX(280px) rotate(0deg); }
+    100% { transform: rotate(360deg) translateX(280px) rotate(-360deg); }
+}
+
+@keyframes orbit7 {
+    0% { transform: rotate(0deg) translateX(320px) rotate(0deg); }
+    100% { transform: rotate(360deg) translateX(320px) rotate(-360deg); }
+}
+
+@keyframes orbit8 {
+    0% { transform: rotate(0deg) translateX(360px) rotate(0deg); }
+    100% { transform: rotate(360deg) translateX(360px) rotate(-360deg); }
+}
+
+@keyframes orbit9 {
+    0% { transform: rotate(0deg) translateX(400px) rotate(0deg); }
+    100% { transform: rotate(360deg) translateX(400px) rotate(-360deg); }
+}
+.sun {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.sun:hover {
+    transform: scale(1.1);
+}
+.speed-control {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 10px 15px;
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    z-index: 999;
+}
+
+.speed-control input[type="range"] {
+    width: 120px;
+    vertical-align: middle;
+    margin-left: 8px;
+}
+
+
+
+
