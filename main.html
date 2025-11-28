@@ -5,201 +5,94 @@
     <title>Universe Explorer</title>
     <link rel="stylesheet" href="design.css">
     <style>
-        /* --- ADDED: Asteroid projectile --- */
+        /* Asteroid styling */
         #asteroid {
             position: absolute;
-            width: 12px;
-            height: 12px;
-            background: radial-gradient(circle, #bbb, #666);
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #fff, #888);
             border-radius: 50%;
-            top: 60%;
-            left: 20%;
             cursor: grab;
             z-index: 20;
         }
 
-        /* Small glowing trail */
+        /* Trail particles */
         .trail {
             position: absolute;
-            width: 4px;
-            height: 4px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.5);
+            background: rgba(255,255,200,0.7);
             pointer-events: none;
             z-index: 1;
         }
+
+        /* Destroy buttons panel */
+        #destroy-controls {
+            margin: 10px;
+        }
+
+        #destroy-controls button {
+            margin: 2px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
     </style>
 </head>
-
 <body>
-    <canvas id="starCanvas"></canvas> 
 
-    <h1>💫The Solar System</h1>
+<canvas id="starCanvas"></canvas>
 
-    <div class="speed-control">
-      <label for="speedSlider">🌀 Orbit Speed:</label>
-      <input type="range" id="speedSlider" min="0.1" max="3" step="0.1" value="1">
-      <span id="speedValue">1x</span>
-    </div>
+<h1>💫The Solar System</h1>
 
-    <div class="solar-system">
-        <div class="sun" onclick="showInfo('Sun')"></div>
+<!-- Orbit speed slider -->
+<div class="speed-control">
+  <label for="speedSlider">🌀 Orbit Speed:</label>
+  <input type="range" id="speedSlider" min="0.1" max="3" step="0.1" value="1">
+  <span id="speedValue">1x</span>
+</div>
 
-        <div class="planet mercury" onclick="showInfo('Mercury')"></div>
-        <div class="planet venus" onclick="showInfo('Venus')"></div>
-        <div class="planet earth" onclick="showInfo('Earth')"></div>
-        <div class="planet mars" onclick="showInfo('Mars')"></div>
-        <div class="planet jupiter" onclick="showInfo('Jupiter')"></div>
-        <div class="planet saturn" onclick="showInfo('Saturn')">
-            <div class="ring"></div>
-        </div>
-        <div class="planet uranus" onclick="showInfo('Uranus')"></div>
-        <div class="planet neptune" onclick="showInfo('Neptune')"></div>
-        <div class="planet pluto" onclick="showInfo('Pluto')"></div>
+<!-- Destroy planets buttons -->
+<div id="destroy-controls">
+    <h3>Destroy Planets:</h3>
+    <button onclick="destroyPlanet('mercury')">Mercury</button>
+    <button onclick="destroyPlanet('venus')">Venus</button>
+    <button onclick="destroyPlanet('earth')">Earth</button>
+    <button onclick="destroyPlanet('mars')">Mars</button>
+    <button onclick="destroyPlanet('jupiter')">Jupiter</button>
+    <button onclick="destroyPlanet('saturn')">Saturn</button>
+    <button onclick="destroyPlanet('uranus')">Uranus</button>
+    <button onclick="destroyPlanet('neptune')">Neptune</button>
+    <button onclick="destroyPlanet('pluto')">Pluto</button>
+</div>
 
-        <!-- ADDED: Asteroid projectile -->
-        <div id="asteroid"></div>
+<!-- Solar system -->
+<div class="solar-system">
+    <div class="sun" onclick="showInfo('Sun')"></div>
 
-    </div>
+    <div class="planet mercury" onclick="showInfo('Mercury')"></div>
+    <div class="planet venus" onclick="showInfo('Venus')"></div>
+    <div class="planet earth" onclick="showInfo('Earth')"></div>
+    <div class="planet mars" onclick="showInfo('Mars')"></div>
+    <div class="planet jupiter" onclick="showInfo('Jupiter')"></div>
+    <div class="planet saturn" onclick="showInfo('Saturn')"><div class="ring"></div></div>
+    <div class="planet uranus" onclick="showInfo('Uranus')"></div>
+    <div class="planet neptune" onclick="showInfo('Neptune')"></div>
+    <div class="planet pluto" onclick="showInfo('Pluto')"></div>
 
-    <div class="info-box" id="infoBox">
-        <h2 id="planetName">Planet Name</h2>
-        <p id="planetInfo">Click a planet to learn more.</p>
-        <button onclick="closeInfo()">Close</button>
-    </div>
+    <!-- Asteroid -->
+    <div id="asteroid"></div>
+</div>
 
-<!-- ------------------ EXISTING JS (unchanged) ------------------ -->
-<script>
-/* existing planet data + info popup code — unchanged */
-const planetData = {
-    Sun:     { gravity: 274, temp: 5505, description: "A massive star. Center of our solar system." },
-    Mercury: { gravity: 3.7, temp: 167, description: "Small and rocky." },
-    Venus:   { gravity: 8.87, temp: 464, description: "Hot and dense atmosphere." },
-    Earth:   { gravity: 9.81, temp: 15, description: "Our home planet." },
-    Mars:    { gravity: 3.71, temp: -65, description: "Red and dusty." },
-    Jupiter: { gravity: 24.79, temp: -110, description: "Gas giant, massive storms." },
-    Saturn:  { gravity: 10.44, temp: -140, description: "Famous for its rings." },
-    Uranus:  { gravity: 8.69, temp: -195, description: "Icy and rotates sideways." },
-    Neptune: { gravity: 11.15, temp: -200, description: "Farthest, windy and blue." },
-    Pluto:   { gravity: 0.62, temp: -225, description: "Tiny and cold. Dwarf planet." }
-};
+<!-- Info box -->
+<div class="info-box" id="infoBox">
+    <h2 id="planetName">Planet Name</h2>
+    <p id="planetInfo">Click a planet to learn more.</p>
+    <button onclick="closeInfo()">Close</button>
+</div>
 
-function showInfo(name) {
-    const infoBox = document.getElementById('infoBox');
-    const data = planetData[name];
-    document.getElementById('planetName').textContent = name;
-    document.getElementById('planetInfo').textContent =
-        `Gravity: ${data.gravity} m/s² | Avg Temp: ${data.temp}°C | ${data.description}`;
-    infoBox.style.display = 'block';
-}
-function closeInfo() {
-    document.getElementById('infoBox').style.display = 'none';
-}
-</script>
-
-<script>
-/* Starfield animation — unchanged */
-</script>
-
-<script>
-/* Orbit speed slider — unchanged */
-</script>
-
-<!-- ------------------------------------------------------------- -->
-<!-- 🚀 ADDED: Gravity Slingshot Physics Engine -->
-<script>
-const asteroid = document.getElementById("asteroid");
-const sun = document.querySelector(".sun");
-
-// Convert your Java gravity logic to JS
-const G = 6.67430e-11;
-const SUN_MASS = 1.989e30; // real mass of Sun
-
-// Asteroid physics values
-let aX = asteroid.offsetLeft;
-let aY = asteroid.offsetTop;
-let vX = 0;
-let vY = 0;
-
-let dragging = false;
-let startX, startY;
-
-// Start drag
-asteroid.addEventListener("mousedown", e => {
-    dragging = true;
-    vX = 0;
-    vY = 0;
-    startX = e.clientX;
-    startY = e.clientY;
-    asteroid.style.cursor = "grabbing";
-});
-
-// Dragging
-document.addEventListener("mousemove", e => {
-    if (!dragging) return;
-
-    aX = e.clientX;
-    aY = e.clientY;
-
-    asteroid.style.left = aX + "px";
-    asteroid.style.top = aY + "px";
-});
-
-// Release → shoot asteroid
-document.addEventListener("mouseup", e => {
-    if (!dragging) return;
-    dragging = false;
-    asteroid.style.cursor = "grab";
-
-    // launch velocity (scaled)
-    vX = (startX - e.clientX) * 0.02;
-    vY = (startY - e.clientY) * 0.02;
-});
-
-// Main physics loop
-function animateAsteroid() {
-
-    if (!dragging) {
-        // Sun center
-        const sunRect = sun.getBoundingClientRect();
-        const sunX = sunRect.left + sunRect.width/2;
-        const sunY = sunRect.top + sunRect.height/2;
-
-        // Distance to Sun
-        const dx = sunX - aX;
-        const dy = sunY - aY;
-        const distSq = dx*dx + dy*dy;
-        const dist = Math.sqrt(distSq);
-
-        // Gravity force
-        const a = (G * SUN_MASS) / distSq;
-
-        // Normalize and apply
-        vX += (dx / dist) * a * 2e6; 
-        vY += (dy / dist) * a * 2e6;
-
-        // Update asteroid position
-        aX += vX;
-        aY += vY;
-
-        asteroid.style.left = aX + "px";
-        asteroid.style.top = aY + "px";
-
-        // 🔥 Add trail particles
-        const t = document.createElement("div");
-        t.className = "trail";
-        t.style.left = aX + "px";
-        t.style.top = aY + "px";
-        document.body.appendChild(t);
-
-        setTimeout(()=>t.remove(), 500);
-    }
-
-    requestAnimationFrame(animateAsteroid);
-}
-
-animateAsteroid();
-</script>
+<!-- JS scripts -->
+<script src="script.js"></script>
 
 </body>
 </html>
