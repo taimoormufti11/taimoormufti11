@@ -1,107 +1,121 @@
-let userName = '', userAge = '', userGender = '';
+// ---------------- PLANET INFO ----------------
+const planetData = {
+    Sun: { gravity: 274, temp: 5505, description: "A massive star. Center of our solar system." },
+    Mercury: { gravity: 3.7, temp: 167, description: "Small and rocky." },
+    Venus: { gravity: 8.87, temp: 464, description: "Hot and dense atmosphere." },
+    Earth: { gravity: 9.81, temp: 15, description: "Our home planet." },
+    Mars: { gravity: 3.71, temp: -65, description: "Red and dusty." },
+    Jupiter: { gravity: 24.79, temp: -110, description: "Gas giant, massive storms." },
+    Saturn: { gravity: 10.44, temp: -140, description: "Famous for its rings." },
+    Uranus: { gravity: 8.69, temp: -195, description: "Icy and rotates sideways." },
+    Neptune: { gravity: 11.15, temp: -200, description: "Farthest, windy and blue." },
+    Pluto: { gravity: 0.62, temp: -225, description: "Tiny and cold. Dwarf planet." }
+};
 
-document.getElementById("continue-btn").addEventListener("click", () => {
-  userName = document.getElementById("name").value.trim();
-  userAge = document.getElementById("age").value.trim();
-  userGender = document.getElementById("gender").value;
-
-  if (!userName || !userAge || userAge <= 0 || !userGender) {
-    alert("Please fill in all fields correctly.");
-    return;
-  }
-
-  document.getElementById("welcome-section").style.display = "none";
-  document.getElementById("calculator-section").style.display = "block";
-  document.getElementById("greeting").textContent = `Hello, ${userName} (${userAge} yrs, ${userGender})`;
-  updateInputs();
-});
-
-document.getElementById("calculator-type").addEventListener("change", updateInputs);
-
-document.getElementById("calculate-btn").addEventListener("click", () => {
-  const type = document.getElementById("calculator-type").value;
-  const resultDiv = document.getElementById("result");
-
-  const getVal = id => parseFloat(document.getElementById(id)?.value);
-
-  let resultText = "";
-
-  const weight = getVal("weight");
-  const height = getVal("height") / 100; // cm to m
-  const waist = getVal("waist");
-  const hip = getVal("hip");
-
-  switch (type) {
-    case "bmi":
-      if (!weight || !height) return resultDiv.textContent = "Enter valid height and weight.";
-      const bmi = (weight / (height * height)).toFixed(2);
-      let bmiCat = "";
-      if (bmi < 18.5) bmiCat = "Underweight";
-      else if (bmi < 25) bmiCat = "Normal";
-      else if (bmi < 30) bmiCat = "Overweight";
-      else bmiCat = "Obese";
-      resultText = `BMI: ${bmi} (${bmiCat})`;
-      break;
-
-    case "bmr":
-      if (!weight || !height) return resultDiv.textContent = "Enter valid height and weight.";
-      const bmr = userGender === "male"
-        ? (10 * weight + 6.25 * (height * 100) - 5 * userAge + 5)
-        : (10 * weight + 6.25 * (height * 100) - 5 * userAge - 161);
-      resultText = `BMR: ${bmr.toFixed(2)} kcal/day`;
-      break;
-
-    case "whr":
-      if (!waist || !hip) return resultDiv.textContent = "Enter valid waist and hip values.";
-      const whr = (waist / hip).toFixed(2);
-      resultText = `WHR: ${whr}`;
-      break;
-
-    case "whtr":
-      if (!waist || !height) return resultDiv.textContent = "Enter valid waist and height.";
-      const whtr = (waist / (height * 100)).toFixed(2);
-      resultText = `WHtR: ${whtr}`;
-      break;
-
-    case "lbm":
-      if (!weight || !height) return resultDiv.textContent = "Enter valid height and weight.";
-      const lbm = userGender === "male"
-        ? (0.407 * weight + 0.267 * (height * 100) - 19.2)
-        : (0.252 * weight + 0.473 * (height * 100) - 48.3);
-      resultText = `LBM: ${lbm.toFixed(2)} kg`;
-      break;
-
-    case "ibw":
-      if (!height) return resultDiv.textContent = "Enter valid height.";
-      const hInches = height * 39.3701;
-      let ibw = userGender === "male"
-        ? 50 + 2.3 * (hInches - 60)
-        : 45.5 + 2.3 * (hInches - 60);
-      if (hInches < 60) ibw = userGender === "male" ? 50 : 45.5;
-      resultText = `IBW: ${ibw.toFixed(2)} kg`;
-      break;
-  }
-
-  resultDiv.textContent = resultText;
-});
-
-function updateInputs() {
-  const type = document.getElementById("calculator-type").value;
-  const inputArea = document.getElementById("input-fields");
-
-  const html = {
-    bmi: `<input type="number" id="weight" placeholder="Weight (kg)" />
-          <input type="number" id="height" placeholder="Height (cm)" />`,
-    bmr: `<input type="number" id="weight" placeholder="Weight (kg)" />
-          <input type="number" id="height" placeholder="Height (cm)" />`,
-    whr: `<input type="number" id="waist" placeholder="Waist (cm)" />
-          <input type="number" id="hip" placeholder="Hip (cm)" />`,
-    whtr: `<input type="number" id="waist" placeholder="Waist (cm)" />
-           <input type="number" id="height" placeholder="Height (cm)" />`,
-    lbm: `<input type="number" id="weight" placeholder="Weight (kg)" />
-          <input type="number" id="height" placeholder="Height (cm)" />`,
-    ibw: `<input type="number" id="height" placeholder="Height (cm)" />`
-  };
-
-  inputArea.innerHTML = html[type] || '';
+function showInfo(name){
+    const infoBox = document.getElementById('infoBox');
+    const data = planetData[name];
+    document.getElementById('planetName').textContent = name;
+    document.getElementById('planetInfo').textContent = 
+        `Gravity: ${data.gravity} m/s² | Avg Temp: ${data.temp}°C | ${data.description}`;
+    infoBox.style.display = 'block';
 }
+
+function closeInfo(){ document.getElementById('infoBox').style.display = 'none'; }
+
+// ---------------- STARFIELD ----------------
+const canvas = document.getElementById('starCanvas');
+const ctx = canvas.getContext('2d');
+let stars = [], numStars=150;
+
+function initStars(){
+    stars=[];
+    for(let i=0;i<numStars;i++){
+        stars.push({x:Math.random()*window.innerWidth, y:Math.random()*window.innerHeight, radius:Math.random()*1.5, alpha:Math.random(), delta:Math.random()*0.02});
+    }
+}
+
+function drawStars(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    for(let s of stars){
+        ctx.beginPath();
+        ctx.arc(s.x,s.y,s.radius,0,Math.PI*2);
+        ctx.fillStyle=`rgba(255,255,255,${s.alpha})`;
+        ctx.fill();
+        s.alpha+=s.delta;
+        if(s.alpha<=0||s.alpha>=1)s.delta=-s.delta;
+    }
+    requestAnimationFrame(drawStars);
+}
+
+function resizeCanvas(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; initStars(); }
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas(); drawStars();
+
+// ---------------- ORBIT SPEED ----------------
+const slider = document.getElementById("speedSlider");
+const speedDisplay = document.getElementById("speedValue");
+slider.addEventListener("input",()=>{
+    const speed=parseFloat(slider.value);
+    speedDisplay.textContent=`${speed.toFixed(1)}x`;
+    document.querySelectorAll(".planet").forEach(p=>{
+        const style=window.getComputedStyle(p);
+        const animationName=style.animationName;
+        const baseDuration=getBaseDuration(animationName);
+        if(baseDuration)p.style.animationDuration=(baseDuration/speed)+"s";
+    });
+});
+function getBaseDuration(name){
+    const durations={ orbit1:10, orbit2:15, orbit3:20, orbit4:25, orbit5:30, orbit6:35, orbit7:40, orbit8:45, orbit9:50 };
+    return durations[name]||null;
+}
+
+// ---------------- DESTROY PLANETS ----------------
+function destroyPlanet(className){
+    const planet=document.querySelector(`.${className}`);
+    if(planet) planet.remove();
+}
+
+// ---------------- GRAVITY SLINGSHOT ASTEROID ----------------
+const asteroid = document.getElementById("asteroid");
+const sun = document.querySelector(".sun");
+const G = 6.6743e-11, SUN_MASS = 1.989e30;
+
+let aX=window.innerWidth*0.2, aY=window.innerHeight*0.6, vX=0, vY=0, dragging=false, startX, startY;
+asteroid.style.left=aX+"px"; asteroid.style.top=aY+"px";
+
+asteroid.addEventListener("mousedown",e=>{
+    dragging=true; vX=0; vY=0; startX=e.clientX; startY=e.clientY;
+    asteroid.style.cursor="grabbing";
+});
+document.addEventListener("mousemove",e=>{
+    if(!dragging) return;
+    aX=e.clientX; aY=e.clientY;
+    asteroid.style.left=aX+"px"; asteroid.style.top=aY+"px";
+});
+document.addEventListener("mouseup",e=>{
+    if(!dragging) return;
+    dragging=false; asteroid.style.cursor="grab";
+    vX=(startX-e.clientX)*0.02; vY=(startY-e.clientY)*0.02;
+});
+
+function animateAsteroid(){
+    if(!dragging){
+        const sunRect=sun.getBoundingClientRect();
+        const sunX=sunRect.left+sunRect.width/2, sunY=sunRect.top+sunRect.height/2;
+        const dx=sunX-aX, dy=sunY-aY;
+        const distSq=dx*dx+dy*dy, dist=Math.sqrt(distSq);
+        const a=(G*SUN_MASS)/distSq;
+        vX+=(dx/dist)*a*1e8; vY+=(dy/dist)*a*1e8;
+        aX+=vX; aY+=vY;
+        asteroid.style.left=aX+"px"; asteroid.style.top=aY+"px";
+
+        // Trail
+        const t=document.createElement("div"); t.className="trail";
+        t.style.left=aX+"px"; t.style.top=aY+"px";
+        document.body.appendChild(t);
+        setTimeout(()=>t.remove(),500);
+    }
+    requestAnimationFrame(animateAsteroid);
+}
+animateAsteroid();
